@@ -28,7 +28,7 @@ Also included: IDE sidebar + frameless always-on-top desktop overlay, throw / bo
 
 ## Install (recommended)
 
-1. Download the latest `.vsix` from [Releases](https://github.com/antigravity-community/antigravity-gemini-pet/releases)
+1. Download the latest `.vsix` from [Releases](https://github.com/baixiongwu0-bot/antigravity-gemini-pet/releases)
 2. Open Antigravity IDE → **Extensions**
 3. Drag the `.vsix` onto the Extensions panel (or use *Install from VSIX…*)
 4. Reload the window — the pet appears in the Activity Bar and (optionally) as a desktop overlay

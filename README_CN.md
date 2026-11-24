@@ -28,7 +28,7 @@
 
 ## 安装（推荐）
 
-1. 从 [Releases](https://github.com/antigravity-community/antigravity-gemini-pet/releases) 下载最新 `.vsix`
+1. 从 [Releases](https://github.com/baixiongwu0-bot/antigravity-gemini-pet/releases) 下载最新 `.vsix`
 2. 打开 Antigravity IDE → **扩展**面板
 3. 将 `.vsix` **拖入扩展面板**（或选「从 VSIX 安装…」）
 4. 重载窗口即可——活动栏出现猫娘控制台，并可自动唤起桌面悬浮窗
