@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build outputs & Release installers (upload .vsix as GitHub Release assets, do not commit)
+dist/
+dist/*.vsix
+*.vsix
+out/
+
+# Runtime caches, logs & Electron userData (never commit binaries or runtime state)
+.runtime/
+runtime/electron/
+*.log
+npm-debug.log*
+
+# Source gallery / processing inputs (large binaries; processed assets live in assets/)
+raw_gallery/
+
+# Editor & OS temporary files
+.DS_Store
+Thumbs.db
+*.bak-*
+.vscode-test/

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' http://127.0.0.1:*; connect-src http://127.0.0.1:*; img-src 'self' data:;" />
+  <title>Gemini 星芒异色瞳猫娘</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Segoe UI", sans-serif;
+    }
+    #stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
+    #pet-wrap {
+      position: absolute;
+      cursor: grab;
+    }
+    #pet-wrap.dragging {
+      cursor: grabbing;
+    }
+    #pet-canvas {
+      display: block;
+      background: transparent;
+      pointer-events: none;
+    }
+    #pet-bubble {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% - 16px);
+      transform: translateX(-50%) translateY(10px) scale(0.72);
+      transform-origin: center bottom;
+      width: max-content;
+      min-width: 132px;
+      max-width: 256px;
+      padding: 9px 15px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #FFF9FE 0%, #F3E7FF 100%);
+      border: 2px solid #B983FF;
+      box-shadow: 0 8px 20px rgba(108, 66, 178, 0.24), 0 2px 8px rgba(185, 131, 255, 0.26);
+      font-family: "YouYuan", "幼圆", "STCaiyun", "华文彩云", "FZShaoEr", "PingFang SC", "Comic Sans MS", sans-serif;
+      color: #4A256E;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.48;
+      letter-spacing: 0.02em;
+      text-align: center;
+      white-space: normal;
+      overflow: visible;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.18s ease;
+      z-index: 20;
+    }
+    #pet-bubble .bubble-text {
+      position: relative;
+      z-index: 2;
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      color: #4A256E;
+      text-shadow:
+        -1.5px -1.5px 0 #FFFFFF,
+         0px   -1.5px 0 #FFFFFF,
+         1.5px -1.5px 0 #FFFFFF,
+        -1.5px  0px   0 #FFFFFF,
+         1.5px  0px   0 #FFFFFF,
+        -1.5px  1.5px 0 #FFFFFF,
+         0px    1.5px 0 #FFFFFF,
+         1.5px  1.5px 0 #FFFFFF,
+         0px    2px   6px rgba(185, 131, 255, 0.36);
+    }
+    #pet-bubble .bubble-ear {
+      position: absolute;
+      top: -13px;
+      width: 22px;
+      height: 15px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #pet-bubble .bubble-ear-l {
+      left: 16px;
+      transform: rotate(-10deg);
+    }
+    #pet-bubble .bubble-ear-r {
+      right: 16px;
+      transform: rotate(10deg);
+    }
+    #pet-bubble .bubble-star {
+      position: absolute;
+      pointer-events: none;
+      z-index: 3;
+      animation: bubbleStarTwinkle 2.1s ease-in-out infinite;
+    }
+    #pet-bubble .bubble-star-l {
+      left: -8px;
+      top: -8px;
+      width: 15px;
+      height: 15px;
+    }
+    #pet-bubble .bubble-star-r {
+      right: -7px;
+      top: -11px;
+      width: 13px;
+      height: 13px;
+      animation-delay: 0.75s;
+    }
+    #pet-bubble::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      width: 12px;
+      height: 12px;
+      transform: translateX(-50%) rotate(45deg);
+      background: #F3E7FF;
+      border-right: 2px solid #B983FF;
+      border-bottom: 2px solid #B983FF;
+      border-bottom-right-radius: 3px;
+    }
+    #pet-bubble.visible {
+      opacity: 1;
+      animation:
+        petBubblePopIn 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+        petBubbleFloat 3.2s ease-in-out 0.42s infinite;
+    }
+    #pet-bubble[data-kind="work"] {
+      border-color: #9A7BFF;
+      box-shadow: 0 8px 22px rgba(96, 118, 214, 0.28), 0 0 14px rgba(154, 178, 255, 0.42);
+    }
+    @keyframes petBubblePopIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px) scale(0.68);
+      }
+      65% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-3px) scale(1.06);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+    }
+    @keyframes petBubbleFloat {
+      0%, 100% {
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+      50% {
+        transform: translateX(-50%) translateY(-3.5px) scale(1);
+      }
+    }
+    @keyframes bubbleStarTwinkle {
+      0%, 100% {
+        transform: scale(0.88) rotate(0deg);
+        opacity: 0.84;
+      }
+      50% {
+        transform: scale(1.16) rotate(14deg);
+        opacity: 1;
+      }
+    }
+    #pet-tooltip {
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      transform: translateX(-50%);
+      padding: 3px 9px;
+      border-radius: 10px;
+      background: rgba(22, 18, 52, 0.86);
+      border: 1px solid rgba(176, 152, 255, 0.55);
+      color: #e8e0ff;
+      font-size: 11px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      white-space: nowrap;
+    }
+    #pet-tooltip.visible {
+      opacity: 1;
+    }
+    .ctx-menu {
+      position: fixed;
+      min-width: 176px;
+      padding: 6px;
+      border-radius: 12px;
+      background: rgba(22, 18, 48, 0.96);
+      border: 1px solid rgba(154, 134, 255, 0.52);
+      box-shadow: 0 12px 32px rgba(8, 6, 24, 0.65);
+      color: #f2edff;
+      font-size: 12.5px;
+      z-index: 9999;
+    }
+    .ctx-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .ctx-item:hover {
+      background: rgba(132, 108, 255, 0.34);
+    }
+    .ctx-sep {
+      height: 1px;
+      margin: 4px 6px;
+      background: rgba(180, 162, 255, 0.22);
+    }
+    .ctx-sub {
+      position: fixed;
+      min-width: 154px;
+      padding: 6px;
+      border-radius: 12px;
+      background: rgba(22, 18, 48, 0.97);
+      border: 1px solid rgba(154, 134, 255, 0.52);
+      box-shadow: 0 12px 28px rgba(8, 6, 24, 0.68);
+      color: #f2edff;
+      font-size: 12.5px;
+      z-index: 10000;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <div id="pet-wrap">
+      <div id="pet-bubble">
+        <svg class="bubble-ear bubble-ear-l" viewBox="0 0 24 16" aria-hidden="true">
+          <path d="M2 15 Q5 2 11 2 Q17 2 22 15 Z" fill="#FFF9FE" stroke="#B983FF" stroke-width="2" stroke-linejoin="round" />
+          <path d="M6.5 14 Q9.5 6 11.2 6 Q13.5 6 17 14 Z" fill="#F8B4EB" />
+        </svg>
+        <svg class="bubble-ear bubble-ear-r" viewBox="0 0 24 16" aria-hidden="true">
+          <path d="M2 15 Q7 2 13 2 Q19 2 22 15 Z" fill="#FFF9FE" stroke="#B983FF" stroke-width="2" stroke-linejoin="round" />
+          <path d="M7 14 Q10.5 6 12.8 6 Q14.5 6 17.5 14 Z" fill="#F8B4EB" />
+        </svg>
+        <svg class="bubble-star bubble-star-l" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 0 Q9.4 6.6 16 8 Q9.4 9.4 8 16 Q6.6 9.4 0 8 Q6.6 6.6 8 0 Z" fill="#FFD970" stroke="#FFFFFF" stroke-width="1" />
+        </svg>
+        <svg class="bubble-star bubble-star-r" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 0 Q9.4 6.6 16 8 Q9.4 9.4 8 16 Q6.6 9.4 0 8 Q6.6 6.6 8 0 Z" fill="#C996FF" stroke="#FFFFFF" stroke-width="1" />
+        </svg>
+        <span class="bubble-text"></span>
+      </div>
+      <canvas id="pet-canvas"></canvas>
+      <div id="pet-tooltip"></div>
+    </div>
+  </div>
+  <script>window.__GEMINI_PET_ASSET_BASE__ = '../../assets/poses';</script>
+  <script src="../../dist/desktop/shared-core.js"></script>
+  <script src="./renderer.js"></script>
+</body>
+</html>

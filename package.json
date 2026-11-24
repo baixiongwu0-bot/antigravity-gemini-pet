@@ -1,0 +1,276 @@
+{
+  "name": "antigravity-gemini-pet",
+  "displayName": "Gemini 星芒异色瞳猫娘桌宠 (Antigravity Pet)",
+  "description": "专属于 Google Antigravity IDE 的 2 头身 Q 版「Gemini 星芒异色瞳猫娘」桌面宠物扩展。支持 60fps 高精分层 2D 骨骼动画、IDE 侧边栏内嵌 + 透明置顶桌面悬浮双形态、拖拽抛掷与多开互撞物理，以及 Antigravity Agent 实时状态联动。",
+  "version": "1.0.0",
+  "publisher": "antigravity-community",
+  "license": "MIT",
+  "icon": "assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antigravity-community/antigravity-gemini-pet"
+  },
+  "keywords": [
+    "antigravity",
+    "gemini",
+    "desktop-pet",
+    "catgirl",
+    "pet",
+    "webview",
+    "electron",
+    "dsh-pet"
+  ],
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:geminiPet.stageView"
+  ],
+  "main": "./dist/extension/extension.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "package": "node scripts/build.mjs && node scripts/package-vsix.mjs"
+  },
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "gemini-pet-sidebar",
+          "title": "Gemini 星芒猫娘",
+          "icon": "assets/sidebar-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "gemini-pet-sidebar": [
+        {
+          "type": "webview",
+          "id": "geminiPet.stageView",
+          "name": "星芒猫娘 · 控制台",
+          "icon": "assets/sidebar-icon.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "geminiPet.toggleVisibility",
+        "title": "显隐猫娘桌宠",
+        "category": "Gemini 星芒猫娘",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "geminiPet.toggleDesktopMode",
+        "title": "切换桌面透明悬浮模式",
+        "category": "Gemini 星芒猫娘",
+        "icon": "$(window)"
+      },
+      {
+        "command": "geminiPet.openPanel",
+        "title": "打开猫娘控制面板",
+        "category": "Gemini 星芒猫娘",
+        "icon": "$(layout-sidebar-left)"
+      },
+      {
+        "command": "geminiPet.triggerAction",
+        "title": "触发猫娘互动动作...",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.feedSnack",
+        "title": "喂一块小鱼干",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.tossStar",
+        "title": "和猫娘抛玩四角星",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.toggleSleep",
+        "title": "让猫娘打盹 / 叫醒猫娘",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.switchAvatarStyle",
+        "title": "切换猫娘形象风格...",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.summonPet",
+        "title": "召唤一只新猫娘（多开）",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.removeExtraPet",
+        "title": "送走一只多开猫娘",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.resetPositions",
+        "title": "猫娘回到右下角初始位置",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.simulateAgentState",
+        "title": "演练 Agent 状态联动...",
+        "category": "Gemini 星芒猫娘"
+      },
+      {
+        "command": "geminiPet.showServerInfo",
+        "title": "查看本地 HTTP 状态联动接口",
+        "category": "Gemini 星芒猫娘"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "geminiPet.toggleDesktopMode",
+        "key": "ctrl+alt+p",
+        "mac": "cmd+alt+p"
+      },
+      {
+        "command": "geminiPet.toggleVisibility",
+        "key": "ctrl+alt+shift+p",
+        "mac": "cmd+alt+shift+p"
+      },
+      {
+        "command": "geminiPet.feedSnack",
+        "key": "ctrl+alt+f",
+        "mac": "cmd+alt+f"
+      },
+      {
+        "command": "geminiPet.toggleSleep",
+        "key": "ctrl+alt+z",
+        "mac": "cmd+alt+z"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "geminiPet.toggleDesktopMode",
+          "when": "view == geminiPet.stageView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "geminiPet.toggleVisibility",
+          "when": "view == geminiPet.stageView",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Gemini 星芒猫娘桌宠",
+      "properties": {
+        "geminiPet.autoLaunchDesktop": {
+          "type": "boolean",
+          "default": true,
+          "description": "打开 Antigravity IDE 时是否自动启动右下角透明置顶桌面悬浮猫娘。"
+        },
+        "geminiPet.displayMode": {
+          "type": "string",
+          "enum": [
+            "both",
+            "ide",
+            "desktop",
+            "none"
+          ],
+          "enumDescriptions": [
+            "同时启用 IDE 内嵌视图与透明置顶桌面悬浮窗",
+            "仅在 Antigravity IDE 侧边栏内嵌显示",
+            "仅在桌面透明悬浮窗显示",
+            "暂时隐藏全部桌宠"
+          ],
+          "default": "both",
+          "description": "桌宠默认双形态显示模式。"
+        },
+        "geminiPet.avatarStyle": {
+          "type": "string",
+          "enum": [
+            "chibi",
+            "illust",
+            "mixed"
+          ],
+          "enumDescriptions": [
+            "Q版萌系全动作（默认）",
+            "精致立绘全动作",
+            "双画风混搭"
+          ],
+          "default": "chibi",
+          "description": "猫娘桌宠形象风格（Q版萌系全动作 / 精致立绘全动作 / 双画风混搭）。"
+        },
+        "geminiPet.electronPath": {
+          "type": "string",
+          "default": "",
+          "description": "自定义 Electron 可执行文件路径（留空则自动探测本机 Electron，优先检查 GEMINI_PET_ELECTRON_PATH）。"
+        },
+        "geminiPet.runtimeDataDir": {
+          "type": "string",
+          "default": "",
+          "description": "桌面悬浮窗运行期缓存/userData 目录（留空默认放在项目目录 .runtime 下，绝不写入 C 盘）。"
+        },
+        "geminiPet.petSize": {
+          "type": "number",
+          "default": 240,
+          "minimum": 140,
+          "maximum": 420,
+          "description": "桌面悬浮猫娘画布基准尺寸（像素，140~420）。"
+        },
+        "geminiPet.petName": {
+          "type": "string",
+          "default": "星芒喵",
+          "description": "主猫娘昵称。"
+        },
+        "geminiPet.fixedPosition": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否固定猫娘位置（开启后不触发随机漫游与自动转向，仍支持鼠标手动拖拽）。"
+        },
+        "geminiPet.enableAgentLink": {
+          "type": "boolean",
+          "default": true,
+          "description": "开启 Antigravity Agent 状态联动（监听 IDE 终端/任务/调试事件 + Antigravity 会话日志 + 本地 HTTP 接口）。"
+        },
+        "geminiPet.httpPort": {
+          "type": "number",
+          "default": 47821,
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "本地 HTTP 状态联动服务端口（127.0.0.1，支持 POST /work-status；若端口被占用则自动回退到空闲端口，填 0 表示每次随机分配）。"
+        },
+        "geminiPet.antigravityBrainDir": {
+          "type": "string",
+          "default": "",
+          "description": "Antigravity 会话日志根目录（留空自动探测 .gemini/antigravity* 下的 brain 目录，只读监听）。"
+        },
+        "geminiPet.enableTray": {
+          "type": "boolean",
+          "default": true,
+          "description": "桌面悬浮模式运行时是否显示系统托盘快捷图标。"
+        },
+        "geminiPet.enablePetCollision": {
+          "type": "boolean",
+          "default": true,
+          "description": "多开多只猫娘时是否启用弹性碰撞反弹物理。"
+        },
+        "geminiPet.enableSound": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否开启轻柔可爱的交互音效（点击喵呜、星芒风铃、吃小鱼干咔嚓声）。"
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^3.3.2",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.3"
+  }
+}
